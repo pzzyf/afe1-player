@@ -1,55 +1,70 @@
-import { changeCurrentMusic, fetchLyric } from "@/store/music";
-import { useAppDispatch } from "@/store";
-import { useRef, useState, useEffect, SyntheticEvent } from "react";
+import { useAppDispatch } from './../../../store/index'
+import { changeCurrentMusic, fetchLyric } from '@/store/music'
+import { useState, useRef, SyntheticEvent, useEffect } from 'react'
 
-export const InitValue = 0.66;
-export default function useDuration(musicList: any[], currentMusic: any) {
-  const [duration, setDuration] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(InitValue);
+export const INITIAL_VOLUME = 0.66
+export default function useDuration(
+  musicList: any[],
+  currentMusic: any
+) {
+  const dispatch = useAppDispatch()
+  // 当前歌曲的时常（毫秒）
+  const [duration, setDuration] = useState(0)
+  //是否正在播放歌曲
+  const [isPlaying, setIsPlaying] = useState(false)
+  // 播放
+  const audioRef = useRef<HTMLAudioElement>(null)
 
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  const dispatch = useAppDispatch();
-
+  //音量
+  const [volume, setVolume] = useState(INITIAL_VOLUME)
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = volume;
+      audioRef.current.volume = volume
     }
-  }, [volume]);
-
-  const setPlaying = () => {
+  }, [volume])
+  /**
+   * 暂停或播放
+   */
+  const switchMusicStaus = () => {
     if (audioRef.current) {
-      isPlaying ? audioRef.current.pause() : audioRef.current.play();
-      setIsPlaying(!isPlaying);
+      isPlaying ? audioRef.current.pause() : audioRef.current.play()
+      setIsPlaying(!isPlaying)
     }
-  };
+  }
+  /**
+   *  切换歌曲
+   * @param type 切换到前一首还是后一首
+   */
+  const switchMusic = async (type: 'pre' | 'next') => {
+    let currentIndex = currentMusic.index
+    currentIndex += type === 'pre' ? -1 : 1
+    if (currentIndex < 0) currentIndex = musicList.length - 1
+    if (currentIndex === musicList.length) currentIndex = 0
+    const Music = musicList[currentIndex]
+    dispatch(changeCurrentMusic(Music))
+    dispatch(fetchLyric(Music.id))
+    // 根据当前状态判断是否要播放
+    isPlaying ? audioRef.current?.play() : audioRef.current?.pause()
+  }
 
-  const switchMusic = async (type: "pre" | "next") => {
-    let currentIndex = currentMusic.index;
-    currentIndex += type === "pre" ? -1 : 1;
-    if (currentIndex < 0) currentIndex = musicList.length - 1;
-    if (currentIndex === currentIndex.length) currentIndex = 0;
-    const Music = musicList[currentIndex];
-    dispatch(changeCurrentMusic(Music));
-    dispatch(fetchLyric(Music.id));
-    isPlaying ? audioRef.current.play() : audioRef.current.pause();
-  };
-
+  /**
+   * 音乐可播放的回调函数
+   * @param e
+   */
   const canplay = (e: SyntheticEvent<HTMLAudioElement, Event>) => {
     // 修改duration
-    setDuration((e.target as HTMLAudioElement).duration * 1000);
-    isPlaying ? audioRef.current?.play() : audioRef.current?.pause();
-  };
+    setDuration((e.target as HTMLAudioElement).duration * 1000)
+    isPlaying ? audioRef.current?.play() : audioRef.current?.pause()
+  }
   return {
-    duration,
-    setDuration,
-    canplay,
-    volume,
+    switchMusicStaus,
     isPlaying,
-    switchMusic,
-    setPlaying,
+    setIsPlaying,
+    duration,
     audioRef,
+    switchMusic,
+    canplay,
     setVolume,
-  };
+    volume
+  }
 }
