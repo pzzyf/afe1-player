@@ -1,5 +1,110 @@
 @import "../iconfont/iconfont.css";
+@import "./color.css";
 
-.img-pan   {
+.bg-pan {
   background: url(../img/pan.png);
+}
+
+.bg-page1 {
+  z-index: -5;
+  background: url(../img/bg-page1.jpg);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  filter: blur(12px);
+  opacity: .7;  
+  transform: scale(1.1);
+  background-size: cover;
+}
+
+.bg-page2 {
+  z-index: -5;
+  background-size: cover;
+  background: url(../img/bg-page2.jpg);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  filter: blur(12px);
+  opacity: .7;
+  transform: scale(1.1);
+}
+
+*{
+  @apply select-none;
+}
+
+.bg-blue{
+  background:var(--blue) !important;
+}
+
+
+.transition{
+  transition:all .3s;
+}
+* {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI,
+    Helvetica Neue, Lato, Roboto, PingFang SC, Microsoft YaHei,
+    sans-serif !important;
+}
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-track {
+  background: hsla(0,0%,53.3%,.1);
+}
+::-webkit-scrollbar-thumb {
+  background: hsla(0,0%,53.3%,.4);
+}
+
+.overflow-two-line {
+  display:-webkit-box;         
+  -webkit-box-orient:vertical; 
+  -webkit-line-clamp:2;        
+  overflow:hidden;             
+  text-overflow:ellipsis;  
+  margin:5px;
+}
+.line-clamp-3{
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.shadow-light{
+  box-shadow: 0 0 10px rgba(255, 255, 255, .15);
+}
+.close{
+  position:relative;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  transition:all .5s;
+}
+.close:hover{
+  transform: rotate(180deg) scale(1.1);
+  
+}
+.close::before{
+  display: block;
+  content:'';
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  position:absolute;
+  top:50%;
+  transform: rotate(45deg);
+}
+.close::after{
+  display: block;
+  content:'';
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  position:absolute;
+  top:50%;
+  transform: rotate(-45deg);
 }
