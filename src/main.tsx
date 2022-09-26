@@ -1,8 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Player from "./components/Player";
+import App from "./App";
 import "virtual:windi.css";
+import "@/assets/css/base.css";
+import { Provider } from "react-redux";
+import store from "@/store";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <Player />
+  <Provider store={store}>
+    <App />
+  </Provider>
 );
