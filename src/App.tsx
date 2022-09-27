@@ -1,5 +1,6 @@
-import Card from "./components/card";
-import Page from "./views/page";
+// import Card from "./components/card";
+import Page from './views/page'
+import Card from './components/card'
 
 function App() {
   return (
@@ -7,7 +8,7 @@ function App() {
       <Card />
       <Page />
     </>
-  );
+  )
 }
 
-export default App;
+export default App
