@@ -9,10 +9,9 @@ import useAudio, { INITIAL_VOLUME } from './hooks/useAudio'
 import useLyric from './hooks/useLyric'
 import useMusicInfo from './hooks/useMusic'
 
-let isJingyin = false
+//需要放在最外面，否则每次执行函数都会重新创建变量
 let volumeCache = 0
-
-// 音乐百分比
+let isJingyin = false
 const Card = memo(() => {
   const dispatch = useAppDispatch()
   useEffect(() => {
@@ -62,6 +61,7 @@ const Card = memo(() => {
   }
 
   const changeJingyin = () => {
+    // isJingyin和volumnCache放在函数外，防止每次执行函数都重新声明变量
     if (!isJingyin) {
       volumeCache = volume
       setVolume(0)
@@ -73,7 +73,6 @@ const Card = memo(() => {
 
   //TODO:音乐挂起时进行相关操作(onSuspend)
   //TODO:用户代理试图获取媒体数据，但数据意外地没有进入。
-  //TODO:点击喇叭，静音
 
   const imgUrl = (size: number, url?: string) =>
     url ? `${url}?param=${size}y${size}` : undefined
@@ -96,7 +95,6 @@ const Card = memo(() => {
           onCanPlay={(e) => canplay(e)}
           onEnded={() => switchMusic('next')}
           onError={() => switchMusic('next')}
-          onSuspend={() => console.log('音乐被挂起，网络质量不好')}
         />
       </PanWrapper>
       <CardWrapper
