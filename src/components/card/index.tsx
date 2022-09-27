@@ -8,6 +8,11 @@ import Slider from '../slider'
 import useAudio, { INITIAL_VOLUME } from './hooks/useAudio'
 import useLyric from './hooks/useLyric'
 import useMusicInfo from './hooks/useMusic'
+
+let isJingyin = false
+let volumeCache = 0
+
+// 音乐百分比
 const Card = memo(() => {
   const dispatch = useAppDispatch()
   useEffect(() => {
@@ -53,16 +58,16 @@ const Card = memo(() => {
 
   // 音乐进度条改变事件
   const onVolumeliderChange = (percent: number) => {
-    volumeCache = percent
     setVolume(percent)
   }
 
-  let isJingyin = false
-  // 音乐百分比
-  const volumePercent = volume
-  let volumeCache = volumePercent
   const changeJingyin = () => {
-    isJingyin ? setVolume(volumeCache) : setVolume(0)
+    if (!isJingyin) {
+      volumeCache = volume
+      setVolume(0)
+    } else {
+      setVolume(volumeCache)
+    }
     isJingyin = !isJingyin
   }
 
@@ -80,14 +85,15 @@ const Card = memo(() => {
             'w-80px h-80px rounded-full p-13px bg-pan img-pan ' +
             (isPlaying ? '' : 'pause')
           }
-          onClick={() => setactive(!active)}>
+          onClick={() => setactive(!active)}
+        >
           <img className="rounded-full " src={imgUrl(140, al?.picUrl)} />
         </div>
         <audio
           src={url}
           ref={audioRef}
-          onTimeUpdate={e => updateTime(e)}
-          onCanPlay={e => canplay(e)}
+          onTimeUpdate={(e) => updateTime(e)}
+          onCanPlay={(e) => canplay(e)}
           onEnded={() => switchMusic('next')}
           onError={() => switchMusic('next')}
           onSuspend={() => console.log('音乐被挂起，网络质量不好')}
@@ -97,9 +103,10 @@ const Card = memo(() => {
         className={'select-none ' + (active ? 'active' : '')}
         style={{
           backgroundImage: `url(${imgUrl(300, al?.picUrl)})`
-        }}>
+        }}
+      >
         {/* 三张背景蒙版 */}
-        {[5, 10, 2].map(item => (
+        {[5, 10, 2].map((item) => (
           <img
             key={item}
             src={imgUrl(300, al?.picUrl)}
@@ -124,7 +131,8 @@ const Card = memo(() => {
                     'text-12px text-center leading-[1.5] text-[hsla(0,0%,100%,.6)] ' +
                     (currentLyricIndex === index ? 'active-lyric' : '')
                   }
-                  key={item.time + item.content}>
+                  key={item.time + item.content}
+                >
                   {item.content}
                 </p>
               ))}
@@ -143,7 +151,7 @@ const Card = memo(() => {
               <Slider
                 direction="row"
                 initialValue={0}
-                change={percent => onTimeSliderChange(percent)}
+                change={(percent) => onTimeSliderChange(percent)}
                 value={timePercent}
               />
             </div>
@@ -159,8 +167,8 @@ const Card = memo(() => {
                 <Slider
                   direction="col"
                   initialValue={INITIAL_VOLUME}
-                  value={volumePercent}
-                  change={percent => onVolumeliderChange(percent)}
+                  value={volume}
+                  change={(percent) => onVolumeliderChange(percent)}
                 />
               </div>
             </div>
