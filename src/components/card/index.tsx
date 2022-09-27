@@ -118,7 +118,7 @@ const Card = memo(() => {
           </div>
           {/* 歌手 */}
           <p className="h-40px text-12px text-center text-[hsla(0,0%,100%,.6)] leading-20px mb-20px w-140px ">
-            歌手：{singers}
+            歌手啊：{singers}
           </p>
           {/* 歌词 */}
           <div className="flex-1 overflow-hidden relative px-15px">
